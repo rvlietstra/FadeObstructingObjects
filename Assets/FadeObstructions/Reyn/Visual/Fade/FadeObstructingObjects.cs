@@ -16,7 +16,6 @@ public class FadeObstructingObjects : MonoBehaviour
         public GameObject GameObject { get; set; }
         public FadeObjectOptions Options { get; set; }
         public float TransparencyLevel { get; set; }
-        public List<Shader> OrigionalShaders = new List<Shader>();
     }
 
     /// <summary>
@@ -52,14 +51,12 @@ public class FadeObstructingObjects : MonoBehaviour
             Debug.LogError("There should be only one FadeObstructingObjects component in your scene");
     }
 
-    // Shader to use for fading
-    public Shader FadeShader = null;
-
     // Camera viewing the object this script is on
     public Camera Camera;
 
     // Seconds it takes to fade
-    public float Seconds = 1f;
+    public float FadeOutSeconds = 1f;
+    public float FadeInSeconds = 1f;
 
     // A ray is cast from the camera to the object this script is on
     public float RayRadius = 0.25f;
@@ -90,9 +87,22 @@ public class FadeObstructingObjects : MonoBehaviour
         ShouldBeVisibleObjects.Remove(shouldBeVisible);
     }
 
-
+    bool loggedCameraError = false;
     void Update()
     {
+        if (Camera == null)
+        {
+            if (!loggedCameraError)
+            {
+                Debug.LogError("You need to set the camera for Fade Obstructing Objects to work", this);
+                loggedCameraError = true;
+            }
+
+            return;
+        }
+
+        loggedCameraError = false;
+
         List<GameObject> objectsInWay = new List<GameObject>();
 
         // Build up a list of objects that are in the way of all registered should show objects
@@ -135,18 +145,6 @@ public class FadeObstructingObjects : MonoBehaviour
 
                 hiddenObject = new FadeObject { GameObject = go, TransparencyLevel = 1.0f };
                 
-                // Store the origional shader
-                foreach (Material m in go.GetComponent<Renderer>().materials)
-                {
-                    hiddenObject.OrigionalShaders.Add(m.shader);
-                    if (fadeObjectOptions != null && fadeObjectOptions.OverrideShader && fadeObjectOptions.FadeShader != null)
-                        m.shader = fadeObjectOptions.FadeShader;
-                    else
-                    {
-                        m.shader = FadeShader;
-                    }
-                }
-
                 //
                 hiddenObject.Options = fadeObjectOptions;
 
@@ -159,7 +157,8 @@ public class FadeObstructingObjects : MonoBehaviour
         // Unhide the objects that are not hidden anymore
         HiddenObjects.RemoveAll(x =>
         {
-            float fadeSeconds = x.Options != null && x.Options.OverrideSeconds ? x.Options.Seconds : Seconds;
+            float fadeOutSeconds = x.Options != null && x.Options.OverrideFadeOutSeconds ? x.Options.FadeOutSeconds : FadeOutSeconds;
+            float fadeInSeconds = x.Options != null && x.Options.OverrideFadeInSeconds ? x.Options.FadeInSeconds : FadeInSeconds;
 
             foreach (GameObject go in objectsInWay)
             {
@@ -169,7 +168,7 @@ public class FadeObstructingObjects : MonoBehaviour
                     float maximumFade = x.Options != null && x.Options.OverrideFinalAlpha ? x.Options.FinalAlpha : FinalAlpha;
                     if (x.TransparencyLevel > maximumFade)
                     {
-                        x.TransparencyLevel -= Time.deltaTime * (1.0f / fadeSeconds);
+                        x.TransparencyLevel -= Time.deltaTime * (1.0f / fadeOutSeconds);
 
                         if (x.TransparencyLevel <= maximumFade)
                             x.TransparencyLevel = maximumFade;
@@ -193,22 +192,14 @@ public class FadeObstructingObjects : MonoBehaviour
                 if (x.TransparencyLevel == 0)
                     x.GameObject.GetComponent<Renderer>().enabled = true;
 
-                x.TransparencyLevel += Time.deltaTime * (1.0f / fadeSeconds);
+                x.TransparencyLevel += Time.deltaTime * (1.0f / fadeInSeconds);
                 if (x.TransparencyLevel > 1)
                     x.TransparencyLevel = 1;
 
                 foreach (Material m in x.GameObject.GetComponent<Renderer>().materials)
-                {
                     m.color = new Color(m.color.r, m.color.g, m.color.b, x.TransparencyLevel);
-                }
 
                 return false;
-            }
-
-            // Swap to the origional shaders
-            for (int i = 0; i < x.GameObject.GetComponent<Renderer>().materials.Length; i++)
-            {
-                x.GameObject.GetComponent<Renderer>().materials[i].shader = x.OrigionalShaders[i];
             }
 
             // Remove the FadedObject monobehaviour

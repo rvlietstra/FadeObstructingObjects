@@ -26,26 +26,29 @@ public class FadeObjectOptionsInspector : Editor
 
 
         EditorGUILayout.BeginHorizontal();
-        fadeOption.OverrideSeconds = EditorGUILayout.Toggle(
-            new GUIContent("Override Seconds","Override the number of seconds this object takes to fade to it's final alpha"), 
-            fadeOption.OverrideSeconds);
-        if (fadeOption.OverrideSeconds)
+        fadeOption.OverrideFadeOutSeconds = EditorGUILayout.Toggle(
+            new GUIContent("Fade Out Seconds","Override the number of seconds this object takes to fade to it's final alpha"), 
+            fadeOption.OverrideFadeOutSeconds);
+        if (fadeOption.OverrideFadeOutSeconds)
         {
-            fadeOption.Seconds = EditorGUILayout.FloatField(fadeOption.Seconds);
-            if (fadeOption.Seconds < 0)
-                fadeOption.Seconds = 0;
+            fadeOption.FadeOutSeconds = EditorGUILayout.FloatField(fadeOption.FadeOutSeconds);
+            if (fadeOption.FadeOutSeconds < 0)
+                fadeOption.FadeOutSeconds = 0;
         }
         EditorGUILayout.EndHorizontal();
 
+
         EditorGUILayout.BeginHorizontal();
-        fadeOption.OverrideShader = EditorGUILayout.Toggle(
-            new GUIContent("Override Shader","Override the shader that is used for this object's fading"), 
-            fadeOption.OverrideShader);
-        if (fadeOption.OverrideShader)
-            fadeOption.FadeShader = (Shader)EditorGUILayout.ObjectField(fadeOption.FadeShader, typeof(Shader), true);
+        fadeOption.OverrideFadeInSeconds = EditorGUILayout.Toggle(
+            new GUIContent("Fade In Seconds", "Override the number of seconds this object takes to fade to it's final alpha"),
+            fadeOption.OverrideFadeInSeconds);
+        if (fadeOption.OverrideFadeInSeconds)
+        {
+            fadeOption.FadeInSeconds = EditorGUILayout.FloatField(fadeOption.FadeInSeconds);
+            if (fadeOption.FadeInSeconds < 0)
+                fadeOption.FadeInSeconds = 0;
+        }
         EditorGUILayout.EndHorizontal();
 
-        if (!fadeOption.OverrideFinalAlpha && !fadeOption.OverrideSeconds && !fadeOption.OverrideShader)
-            EditorGUILayout.HelpBox("You don't need this script if you are not overriding anything", MessageType.Warning);
     }
 }

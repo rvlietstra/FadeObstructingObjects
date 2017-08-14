@@ -6,7 +6,6 @@ public class Bullet : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
     {
-        FadeObstructingObjects.Instance.RegisterShouldBeVisible(gameObject);	
 	}
 	
 	// Update is called once per frame
