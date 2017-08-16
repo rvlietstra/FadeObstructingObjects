@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Add this script to the player game object
 /// </summary>
-public class FadeObstructingObjects : MonoBehaviour
+public class FadeObstructionsManager : MonoBehaviour
 {
     /// <summary>
     /// Internal class to keep track of the fading object
@@ -26,13 +26,13 @@ public class FadeObstructingObjects : MonoBehaviour
     {
         void OnDestroy()
         {
-            FadeObstructingObjects.Instance.RemoveFadingObject(this.gameObject);
-            FadeObstructingObjects.Instance.UnRegisterShouldBeVisible(this.gameObject);
+            FadeObstructionsManager.Instance.RemoveFadingObject(this.gameObject);
+            FadeObstructionsManager.Instance.UnRegisterShouldBeVisible(this.gameObject);
         }
     }
 
-    static FadeObstructingObjects instance;
-    public static FadeObstructingObjects Instance
+    static FadeObstructionsManager instance;
+    public static FadeObstructionsManager Instance
     {
         get
         {
@@ -70,6 +70,9 @@ public class FadeObstructingObjects : MonoBehaviour
     List<FadeObject> HiddenObjects = new List<FadeObject>();
     List<GameObject> ShouldBeVisibleObjects = new List<GameObject>();
 
+    //
+    List<GameObject> objectsInWay = new List<GameObject>();
+
     // Check to see if a game object is faded
     public bool IsHidden(GameObject go)
     {
@@ -90,6 +93,7 @@ public class FadeObstructingObjects : MonoBehaviour
     bool loggedCameraError = false;
     void Update()
     {
+        // Check to make sure we have everything we need
         if (Camera == null)
         {
             if (!loggedCameraError)
@@ -100,10 +104,10 @@ public class FadeObstructingObjects : MonoBehaviour
 
             return;
         }
-
         loggedCameraError = false;
 
-        List<GameObject> objectsInWay = new List<GameObject>();
+        // Clear our object list
+        objectsInWay.Clear();
 
         // Build up a list of objects that are in the way of all registered should show objects
         foreach (GameObject go in ShouldBeVisibleObjects)
@@ -136,7 +140,7 @@ public class FadeObstructingObjects : MonoBehaviour
             FadeObject hiddenObject = HiddenObjects.FirstOrDefault(x => x.GameObject == go);
             if (hiddenObject == null)
             {
-                // Get the object fade options
+               // Get the object fade options
                 FadeObjectOptions fadeObjectOptions = go.GetComponent<FadeObjectOptions>();
                 
                 // If the maximum fade is set to 1 then this object won't be hidden, so skip it

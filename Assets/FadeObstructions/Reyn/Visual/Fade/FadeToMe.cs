@@ -11,6 +11,6 @@ public class FadeToMe : MonoBehaviour
 {
     void Start()
     {
-        FadeObstructingObjects.Instance.RegisterShouldBeVisible(this.gameObject);
+        FadeObstructionsManager.Instance.RegisterShouldBeVisible(this.gameObject);
     }
 }

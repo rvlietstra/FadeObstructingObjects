@@ -4,12 +4,12 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-[CustomEditor(typeof(FadeObstructingObjects))]
+[CustomEditor(typeof(FadeObstructionsManager))]
 public class FadeObstructingObjectsInspector : Editor
 {
     public override void OnInspectorGUI()
     {
-        FadeObstructingObjects fade = target as FadeObstructingObjects;
+        FadeObstructionsManager fade = target as FadeObstructionsManager;
 
         fade.Camera = (Camera)EditorGUILayout.ObjectField(new GUIContent("Camera", "Fading is camera dependant, we fade the objects between something and the camera"), fade.Camera, typeof(Camera), true);
 

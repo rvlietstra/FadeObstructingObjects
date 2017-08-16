@@ -2,17 +2,20 @@
 
 If you need any support you can contact me at: reyn.vlietstra@gmail.com
 
+Please have a look at the tutorial video at: https://www.youtube.com/watch?v=CmoL7ZAMFyI
+
 === Setup ===
 
-1. Add the FadeObstructingObjects script to your player.
-2. Set the Fade Shader to the supplied DiffuseZWrite shader.
-3. Set the Camera to the camera that will be viewing the player.
+1. Make sure the objects that will fade have their shader's rendering mode set to 'Fade'
+2. Add the FadeObstructionsManager script to any GameObject and specify your camera on it
+3. Add the FadeToMe script to your player
 
 === Options ===
 
-Seconds: The number of seconds it takes for the fading effect to occur
-Ray radius: The ray radius is the radius of the ray used to find the obstructing objects
 Final Alpha: The transparency level, 0 being completely transparent, 1 being competely opaque
+Fade out seconds: The number of seconds it takes for the objects to fade out
+Fade in seconds: The number of seconds it takes for the objects to fade back to full opacity
+Radius: The ray radius is the radius of the ray used to find the obstructing objects
 Layer Mask: All objects on the selected layers will be faded if found to obstruct the player
 
 === Overriding defaults ===
@@ -22,8 +25,5 @@ the defaults defined in the FadeObstructingObjects script placed on the player.
 
 You can add the FadeObjectOptions script to any object and override those values.
 
-Seconds: override the default seconds, a value of -1 will use the above defaults.
-Final Alpha: Override the default final alpha -1 will use the above defaults
-Fade Shader: Override the default transparency shader, empty will use the above defaults
 
 
