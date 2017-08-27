@@ -1,7 +1,5 @@
 # Fade Obstructions
 
-If you need any support you can contact me at: reyn.vlietstra@gmail.com
-
 Please have a look at the tutorial video at: https://www.youtube.com/watch?v=CmoL7ZAMFyI
 
 ### Setup
