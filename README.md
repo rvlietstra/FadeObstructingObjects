@@ -1,6 +1,6 @@
 # Fade Obstructions
 
-Please have a look at the tutorial video at: https://www.youtube.com/watch?v=CmoL7ZAMFyI
+Please have a look at the tutorial video at: https://youtu.be/iTX87yXn-Sk
 
 ### Setup
 
